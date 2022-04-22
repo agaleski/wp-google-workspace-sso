@@ -1,0 +1,95 @@
+.ag-admin-form {
+  margin-top: 1rem;
+}
+.ag-admin-form h1 {
+  line-height: 3rem;
+}
+.ag-admin-form h1 span {
+  font-size: 3rem;
+}
+.ag-admin-form h2 {
+  background-color: #6495ed;
+  color: #222;
+  padding: 1em;
+  margin: 0 -1rem 1rem -1rem;
+}
+.ag-admin-form > div {
+  margin-bottom: 1rem;
+  background: #333;
+  color: #ddd;
+  border: 1px solid #222;
+  border-top: 2px solid #0d66c2;
+  padding: 0 1rem 1rem 1rem;
+  margin-right: 1rem;
+  box-shadow: 1px 1px 5px #999;
+  max-width: 1000px;
+}
+.ag-admin-form input.disabled {
+  pointer-events: none;
+}
+.ag-admin-form input.half {
+  width: 50%;
+}
+.ag-admin-form input.full {
+  width: 100%;
+}
+.ag-form-table {
+  width: 100%;
+}
+.ag-form-table th {
+  text-align: left;
+  width: 200px;
+}
+.wp-core-ui button.button-warning {
+  color: #fff;
+  background-color: #a00;
+  border-color: #600;
+}
+.wp-core-ui button.button-warning:hover {
+  color: #fff;
+  background-color: #600;
+  border-color: #600;
+}
+.notice {
+  display: none;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  margin-right: 1rem;
+  font-weight: bold;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #a00;
+  transition: .4s;
+}
+.slider:before {
+  content: "\2715";
+  text-align: center;
+  position: absolute;
+  width: 1.5rem;
+  left: 0;
+  bottom: 0;
+  background-color: #fff;
+  transition: .4s;
+  color: #222;
+}
+input:checked + .slider {
+  background-color: #0a0;
+}
+input:checked + .slider:before {
+  content: "\2714";
+  transform: translateX(1.5rem);
+}
