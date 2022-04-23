@@ -43,7 +43,8 @@ function wpgwsso_init()
     if (! defined('REST_REQUEST') && ! defined('DOING_CRON')) {
 
         add_action('login_head', [ Login::class, 'run' ], 1);
-        add_filter('authenticate', [ Login::class, 'authenticate' ], 5);
+        add_filter('authenticate', [ Login::class, 'authenticate' ], 10);
+        add_action('admin_init', [ Admin::class, 'redirectTo' ]);
         add_action('admin_menu', [ Admin::class, 'add' ]);
         add_action('wp_ajax_' . Admin::ACTION, [ Admin::class, 'save' ]);
         add_filter('woocommerce_login_credentials', [ Login::class, 'handleWoocommerce' ], 1);
