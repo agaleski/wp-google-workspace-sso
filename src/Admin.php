@@ -15,6 +15,22 @@ class Admin
     private const NONCE = WPGWSSO_PREFIX . 'save_ajax_nonce';
 
     /**
+     * Redirects a user to the appropriate target after successful Google Workspace SSO login.
+     *
+     * @return void
+     */
+    public static function redirectTo()
+    {
+        if (isset($_COOKIE[ 'wpgwsso_redirect_to' ])) {
+
+            setcookie('wpgwsso_redirect_to', $_GET[ 'redirect_to' ], time() - 120, COOKIEPATH, COOKIE_DOMAIN, true);
+            wp_safe_redirect($_COOKIE[ 'redirect_to' ]);
+            exit;
+
+        }
+    }
+
+    /**
      * Adds the WP-Admin settings page to the "Users" menu.
      *
      * @param string $context
