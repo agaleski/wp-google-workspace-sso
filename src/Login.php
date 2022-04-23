@@ -32,11 +32,16 @@ class Login
 
         $access = Settings::getAccess();
 
-        if (! empty($_GET[ 'handler' ]) && ! empty($access[ $_GET[ 'handler' ] ])) {
+        if (! empty($_GET[ 'workspace' ]) && ! empty($access[ $_GET[ 'workspace' ] ])) {
 
-            setcookie('sso_handler', $_GET[ 'handler' ], time() + 86400, COOKIEPATH, COOKIE_DOMAIN, true);
-            wp_safe_redirect(self::getClient($access[ $_GET[ 'handler' ] ])->createAuthUrl());
+            setcookie('workspace', $_GET[ 'workspace' ], time() + 86400, COOKIEPATH, COOKIE_DOMAIN, true);
+
+            wp_redirect(self::getClient($access[ $_GET[ 'workspace' ] ])->createAuthUrl());
             exit;
+
+        } else if (isset($_GET[ 'redirect_to' ])) {
+
+            setcookie('wpgwsso_redirect_to', $_GET[ 'redirect_to' ], time() + 120, COOKIEPATH, COOKIE_DOMAIN, true);
 
         }
 
@@ -51,19 +56,19 @@ class Login
      *
      * @uses Settings::getAccess(), GoogleClient::fetchAccessTokenWithAuthCode()
      *
-     * @return false|mixed|\WP_User|null
+     * @return \WP_User|null
      */
     public static function authenticate($user = null)
     {
         if (
             isset($_GET[ 'code' ])
-            && isset($_COOKIE[ 'sso_handler' ])
-            && ! empty($access = Settings::getAccess()[ $_COOKIE[ 'sso_handler' ] ])
+            && isset($_COOKIE[ 'workspace' ])
+            && ! empty($access = Settings::getAccess()[ $_COOKIE[ 'workspace' ] ])
         ) {
 
             $client = self::getClient($access);
-            $result = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-            $user   = false;
+            $result = $client->fetchAccessTokenWithAuthCode($_GET[ 'code' ]);
+            $user   = null;
 
             if (isset($result[ 'id_token' ])) {
 
@@ -76,16 +81,7 @@ class Login
 
                 }
 
-
             }
-
-            if (! empty($user)) {
-
-                return $user;
-            }
-
-            wp_redirect(get_home_url() . '/wp-login.php');
-            exit;
 
         }
 
@@ -148,7 +144,7 @@ class Login
         $client->setClientId(Settings::decrypt($access[ 'id' ]));
         $client->setClientSecret(Settings::decrypt($access[ 'secret' ]));
         $client->addScope([ 'openid', 'email', 'https://www.googleapis.com/auth/userinfo.profile', ]);
-        $client->setRedirectUri(get_home_url() . '/wp-login.php');
+        $client->setRedirectUri(wp_login_url());
 
         return $client;
     }
@@ -174,30 +170,28 @@ class Login
                 .container {
                     width: 100%;
                     height: 100%;
-                    display: table;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    font-family: Arial, Helvetica, sans-serif;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
                 }
-                .container form {
-                    display: table-cell;
-                    vertical-align: middle;
+                form {
+                    #display: inline-block;
                 }
-                .container form > div {
+                form > div {
                     text-align: center;
                     margin: 0 auto;
                     width: 100%;
                     background: #fff;
                     padding: 1rem 0;
                 }
-                .container form select {
+                select {
                     padding: 0.3rem;
                     cursor: pointer;
                     outline: none;
                     margin-top: 1px;
                 }
-                .container form button {
+                button {
                     background-color: #3E5BC7;
                     padding: 5px 12px;
                     color: #fff;
@@ -211,16 +205,15 @@ class Login
             <form>
                 <div><?=get_custom_logo(get_current_blog_id())?></div>
                 <div>
-                    <p><label for="handler">Log in with your Google workspace domain:</label></p>
-                    <select id="handler" name="handler">
-                        <option value="" disabled <?=empty($_COOKIE[ 'sso_handler' ]) ? '' : 'selected'?>>
+                    <select id="workspace" name="workspace">
+                        <option value="" disabled <?=empty($_COOKIE[ 'workspace' ]) ? '' : 'selected'?>>
                             Select one
                         </option>
                     <?php foreach ($access as $brand => $data) {
 
-                        $selected = ! empty($_COOKIE[ 'sso_handler' ]) && $_COOKIE[ 'sso_handler' ] === $brand ? 'selected' : '';
+                        $selected = ! empty($_COOKIE[ 'workspace' ]) && $_COOKIE[ 'workspace' ] === $brand ? 'selected' : '';
 
-                        echo "<option value=\"{$brand}\" {$selected}>{$brand}</option>";
+                        echo "<option value=\"{$brand}\" {$selected}>@{$brand}</option>";
 
                     } ?>
                     </select>
