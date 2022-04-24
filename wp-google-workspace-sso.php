@@ -31,6 +31,7 @@ function wpgwsso_init()
         return;
     }
 
+    define('WPGWSSO_PATH',       __DIR__ . '/');
     define('WPGWSSO_REL_PATH',   basename(dirname(__FILE__)));
     define('WPGWSSO_URL',        plugin_dir_url(__FILE__));
     define('WPGWSSO_ADMIN_URL',  admin_url());
