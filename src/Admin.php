@@ -110,6 +110,13 @@ class Admin
                 width: 100%;
                 line-height: 7rem;
             }
+            .ag-admin-form input.disabled {
+                border: none;
+                background-color: #333;
+                color: #fff;
+                font-weight: bold;
+                padding-left: 0;
+            }
         </style>
         <form class="ag-admin-form">
             <?=wp_nonce_field(self::ACTION, self::NONCE, true, false)?>

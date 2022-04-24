@@ -26,6 +26,7 @@
 }
 .ag-admin-form input.disabled {
   pointer-events: none;
+  color: #000;
 }
 .ag-admin-form input.half {
   width: 50%;
