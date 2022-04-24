@@ -192,7 +192,7 @@ class Login
                     margin-top: 1px;
                 }
                 button {
-                    background-color: #3E5BC7;
+                    background-color: #009;
                     padding: 5px 12px;
                     color: #fff;
                     cursor: pointer;
@@ -204,6 +204,7 @@ class Login
         <form>
             <div><?=get_custom_logo(get_current_blog_id())?></div>
             <div>
+                <label for="#workspace">user @</label>
                 <select id="workspace" name="workspace">
                     <option value="" disabled <?=empty($_COOKIE[ 'workspace' ]) ? '' : 'selected'?>>
                         Select one
@@ -212,7 +213,7 @@ class Login
 
                     $selected = ! empty($_COOKIE[ 'workspace' ]) && $_COOKIE[ 'workspace' ] === $brand ? 'selected' : '';
 
-                    echo "<option value=\"{$brand}\" {$selected}>@{$brand}</option>";
+                    echo "<option value=\"{$brand}\" {$selected}>{$brand}</option>";
 
                 } ?>
                 </select>

@@ -23,7 +23,7 @@ class Admin
     {
         if (isset($_COOKIE[ 'wpgwsso_redirect_to' ])) {
 
-            setcookie('wpgwsso_redirect_to', $_GET[ 'redirect_to' ], time() - 120, COOKIEPATH, COOKIE_DOMAIN, true);
+            setcookie('wpgwsso_redirect_to', '', time() - 120, COOKIEPATH, COOKIE_DOMAIN, true);
             wp_safe_redirect($_COOKIE[ 'redirect_to' ]);
             exit;
 
