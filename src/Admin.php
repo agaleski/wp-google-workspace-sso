@@ -114,7 +114,7 @@ class Admin
         <form class="ag-admin-form">
             <?=wp_nonce_field(self::ACTION, self::NONCE, true, false)?>
             <input type="hidden" name="action" value="<?=self::ACTION?>">
-            <h1><span>&#128272;</span> WordPress Google Workspace SSO</h1>
+            <h1><span>&#128272;</span> WordPress ⓖoogle Workspace SSO</h1>
             <div>
                 <h2>Login screen replacement status:</h2>
                 <div>
@@ -172,6 +172,7 @@ class Admin
             }
         </script>
         <?php
+        echo file_get_contents(WPGWSSO_PATH . 'readme.html');
     }
 
     /**
@@ -188,6 +189,11 @@ class Admin
         $option = Settings::OPTION;
         $id     = '';
         $secret = '';
+
+        /**
+         * @todo Hook description!
+         */
+        $extension = apply_filters('wpgwsso_settings_html_extension', '', $domain, $option);
 
         if ($domain !== '%%DOMAIN_NAME%%') {
 
@@ -235,6 +241,7 @@ class Admin
                         />
                     </td>
                 </tr>
+                {$extension}
             </table>
         ";
     }
