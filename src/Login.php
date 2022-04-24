@@ -97,7 +97,7 @@ class Login
      *
      * @return array
      */
-    public static function handleWoocommerce($creds = [])
+    public static function handleWoocommerce(array $creds = []) : array
     {
         if (class_exists('WooCommerce') && ! empty($creds[ 'user_login' ])) {
 
@@ -138,7 +138,7 @@ class Login
      *
      * @return GoogleClient
      */
-    private static function getClient($access = [ 'id' => '', 'secret' => '' ])
+    private static function getClient(array $access = [ 'id' => '', 'secret' => '' ]) : GoogleClient
     {
         $client = new GoogleClient();
         $client->setClientId(Settings::decrypt($access[ 'id' ]));
