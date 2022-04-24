@@ -167,22 +167,22 @@ class Login
             />
             <title><?=get_bloginfo('name', 'display')?></title>
             <style>
-                .container {
+                html, body {
                     width: 100%;
                     height: 100%;
+                }
+                body {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    background: #fff;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    font-family: Verdana, Arial, Helvetica, sans-serif;
-                }
-                form {
-                    #display: inline-block;
+                    overflow: hidden;
                 }
                 form > div {
                     text-align: center;
                     margin: 0 auto;
                     width: 100%;
-                    background: #fff;
                     padding: 1rem 0;
                 }
                 select {
@@ -201,26 +201,24 @@ class Login
             </style>
         </head>
         <body>
-        <div class="container">
-            <form>
-                <div><?=get_custom_logo(get_current_blog_id())?></div>
-                <div>
-                    <select id="workspace" name="workspace">
-                        <option value="" disabled <?=empty($_COOKIE[ 'workspace' ]) ? '' : 'selected'?>>
-                            Select one
-                        </option>
-                    <?php foreach ($access as $brand => $data) {
+        <form>
+            <div><?=get_custom_logo(get_current_blog_id())?></div>
+            <div>
+                <select id="workspace" name="workspace">
+                    <option value="" disabled <?=empty($_COOKIE[ 'workspace' ]) ? '' : 'selected'?>>
+                        Select one
+                    </option>
+                <?php foreach ($access as $brand => $data) {
 
-                        $selected = ! empty($_COOKIE[ 'workspace' ]) && $_COOKIE[ 'workspace' ] === $brand ? 'selected' : '';
+                    $selected = ! empty($_COOKIE[ 'workspace' ]) && $_COOKIE[ 'workspace' ] === $brand ? 'selected' : '';
 
-                        echo "<option value=\"{$brand}\" {$selected}>@{$brand}</option>";
+                    echo "<option value=\"{$brand}\" {$selected}>@{$brand}</option>";
 
-                    } ?>
-                    </select>
-                    <button type="submit">Log in with Google</button>
-                </div>
-            </form>
-        </div>
+                } ?>
+                </select>
+                <button type="submit">Log in with Google</button>
+            </div>
+        </form>
         </body>
         </html>
         <?php
