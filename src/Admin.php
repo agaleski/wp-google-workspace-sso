@@ -63,7 +63,7 @@ class Admin
 
         if (empty($_POST[ Settings::OPTION ])) {
 
-            wp_send_json_error([ 'error' => 'Bad Request' ], 400);
+            wp_send_json_error([ 'error' => 'NOT Saved: Bad Request! Please check with your admin.' ], 400);
 
         }
 
@@ -84,7 +84,7 @@ class Admin
         }
 
         Settings::set($settings);
-        wp_send_json_success([], 202);
+        wp_send_json_success([ 'message' => 'Successfully saved!'], 200);
     }
 
     /**
@@ -101,7 +101,7 @@ class Admin
         <style>
             #ag_settings_container table {
                 margin: 0;
-                border-bottom: 1px solid #000;
+                border-bottom: 1px solid #aaa;
             }
             #ag_settings_container table:last-child {
                 border-bottom: 0;
@@ -110,50 +110,58 @@ class Admin
                 width: 100%;
                 line-height: 7rem;
             }
-            .ag-admin-form input.disabled {
+            .ag-settings form input.disabled {
                 border: none;
                 background-color: #333;
                 color: #fff;
                 font-weight: bold;
                 padding-left: 0;
+                width: calc(100% - 1.5rem);
             }
         </style>
-        <form class="ag-admin-form">
-            <?=wp_nonce_field(self::ACTION, self::NONCE, true, false)?>
-            <input type="hidden" name="action" value="<?=self::ACTION?>">
-            <h1><span>&#128272;</span> WordPress ⓖoogle Workspace SSO</h1>
-            <div>
-                <h2>Login screen replacement status:</h2>
+        <div class="ag-settings">
+            <form>
+                <?=wp_nonce_field(self::ACTION, self::NONCE, true, false)?>
+                <input type="hidden" name="action" value="<?=self::ACTION?>">
+                <h1><span>&#128272;</span> WordPress ⓖoogle Workspace SSO</h1>
                 <div>
-                    <label class="switch">
-                        <input type="checkbox"
-                               id="<?=Settings::OPTION?>[active]"
-                               name="<?=Settings::OPTION?>[active]"
-                               <?=Settings::isActive() ? 'checked="checked"' : ''?>
-                        />
-                        <span class="slider"></span>
-                    </label>
-                    <span>( Replaces default wp-admin login with Google SSO if activated. )</span>
+                    <h2>Login screen replacement status:</h2>
+                    <div>
+                        <label class="switch">
+                            <input type="checkbox"
+                                   id="<?=Settings::OPTION?>[active]"
+                                   name="<?=Settings::OPTION?>[active]"
+                                <?=Settings::isActive() ? 'checked="checked"' : ''?>
+                            />
+                            <span class="slider"></span>
+                        </label>
+                        <span>( Replaces default wp-admin login with Google SSO if activated. )</span>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <h2>Add new workspace domain:</h2>
                 <div>
-                    <label for="sso_new_domain">@</label>
-                    <input type="text" id="sso_new_domain" name="sso_new_domain" class="half" placeholder="example.com">
-                    <button type="button" id="sso_add_new_domain" class="button-secondary">Add workspace domain</button>
+                    <h2>Add new workspace domain:</h2>
+                    <div>
+                        <label for="sso_new_domain">@</label>
+                        <input type="text" id="sso_new_domain" name="sso_new_domain" class="half" placeholder="example.com">
+                        <button type="button" id="sso_add_new_domain" class="button-secondary">Add workspace domain</button>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <h2>Workspace domain settings:</h2>
-                <div id="ag_settings_container">
-                <?php foreach (Settings::getAccess() as $domain => $data) {
-                    echo self::getSettingHtml($domain);
-                } ?>
+                <div>
+                    <h2>Workspace domain settings:</h2>
+                    <div id="ag_settings_container">
+                        <?php foreach (Settings::getAccess() as $domain => $data) {
+                            echo self::getSettingHtml($domain);
+                        } ?>
+                    </div>
                 </div>
+                <button type="submit" class="button-primary">Save settings</button>
+            </form>
+            <div class="ag-notification">
+                <h3>Test</h3>
+                <p>Message</p>
             </div>
-            <button type="submit" class="button-primary">Save settings</button>
-        </form>
+            <?=file_get_contents(WPGWSSO_PATH . 'readme.html');?>
+        </div>
         <script src="<?=WPGWSSO_URL?>assets/js/admin.js?ver=v<?=time()?>"></script>
         <script>
             (function($) {
@@ -179,7 +187,6 @@ class Admin
             }
         </script>
         <?php
-        echo file_get_contents(WPGWSSO_PATH . 'readme.html');
     }
 
     /**
@@ -213,10 +220,10 @@ class Admin
         return "
             <table class=\"ag-form-table\" role=\"presentation\">
                 <tr>
-                    <th><label for=\"{$option}[access][{$domain}][name]\">Domain name</label></th>
+                    <th><label for=\"{$option}[access][{$domain}][name]\">Workspace domain name</label></th>
                     <td>
                         <strong>@&nbsp;</strong>
-                        <input type=\"text\" class=\"half disabled\"
+                        <input type=\"text\" class=\"disabled\"
                                id=\"{$option}[access][{$domain}][name]\"
                                name=\"{$option}[access][{$domain}][name]\"
                                value=\"{$domain}\"
