@@ -40,20 +40,20 @@
   width: 200px;
 }
 .ag-notification {
-  background-color: #fff;
-  color: #000;
+  display: none;
   padding: 0;
   margin: 0;
-  display: none;
 }
 .ag-notification h3 {
   margin: 1rem 0 0 0;
   padding: 1rem;
   background-color: rgba(0,0,0,0.5);
+  color: #fff;
 }
 .ag-notification p {
   padding: 1rem;
   margin: 0 0 1rem 0;
+  color: #fff;
 }
 .ag-settings .switch {
   position: relative;
