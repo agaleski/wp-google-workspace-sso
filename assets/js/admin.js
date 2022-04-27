@@ -2,18 +2,18 @@
 
     'use strict';
 
-    let notice  = $('.ag-notification'),
-        header  = notice.find('h3'),
-        message = notice.find('p')
+    const notice  = $('.ag-notification'),
+          header  = notice.find('h3'),
+          message = notice.find('p')
     ;
 
-    function prepare(color) {
+    const prepare = (color) => {
         notice.hide()
           .css('background-color', color)
         ;
     }
 
-    function flash () {
+    const flash = () => {
         notice.show()
             .delay(5000)
             .fadeOut(1000, function () {
@@ -22,7 +22,7 @@
         ;
     }
 
-    $(".ag-settings form").submit(function (event) {
+    $(".ag-settings form").submit((event) => {
         event.preventDefault();
         $.ajax({
             type: 'POST',
