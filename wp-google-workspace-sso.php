@@ -16,6 +16,15 @@ defined('ABSPATH') || exit;
 use AGaleski\WordPress\GoogleWorkspaceSso\Login;
 use AGaleski\WordPress\GoogleWorkspaceSso\Admin;
 
+/**
+ * Callback function. Custom dependency free psr-4 autoloader for this plugin.
+ *
+ * @used-by  spl_autoload_register()
+ *
+ * @param string $class
+ *
+ * @return void
+ */
 function wpgwsso_autoload($class = '')
 {
     $prefix = 'AGaleski\\WordPress\\GoogleWorkspaceSso\\';
