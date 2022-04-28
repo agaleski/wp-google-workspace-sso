@@ -1,25 +1,22 @@
 {
   "name": "agaleski/wp-google-workspace-sso",
-  "type": "wordpress-plugin",
-  "homepage": "https://github.com/agaleski/wp-google-workspace-sso",
-  "license": "GPLv3",
   "description": "WordPress plugin for Google Workspace single sign-on admin login via OAuth.",
-  "keywords": ["plugin", "sso", "oauth", "google", "login", "wp-admin", "wordpress"],
+  "keywords": ["wordpress", "plugin", "sso", "oauth2", "google", "login", "wp-admin"],
+  "homepage": "https://github.com/agaleski/wp-google-workspace-sso",
+  "license": "MIT",
   "authors": [
     {
       "name": "Achim Galeski",
-      "email": "achim.galeski@gmail.com"
+      "email": "achim.galeski@gmail.com",
+      "homepage": "https://achim-galeski.de"
     }
   ],
-  "autoload": {
-    "psr-4": {
-      "AGaleski\\WordPress\\GoogleWorkspaceSso\\": "src"
-    }
-  },
+  "type": "wordpress-plugin",
   "require": {
     "php": ">=7.4",
     "ext-openssl": "*",
-    "google/apiclient": "^2.12"
+    "google/apiclient": "^2.12",
+    "composer/installers": "^2.0"
   },
   "scripts": {
     "post-update-cmd": "Google\\Task\\Composer::cleanup"
