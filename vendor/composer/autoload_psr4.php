@@ -20,5 +20,4 @@ return array(
     'Google\\Auth\\' => array($vendorDir . '/google/auth/src'),
     'Google\\' => array($vendorDir . '/google/apiclient/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
-    'AGaleski\\WordPress\\GoogleWorkspaceSso\\' => array($baseDir . '/src'),
 );

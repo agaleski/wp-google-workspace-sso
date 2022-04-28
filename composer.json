@@ -15,8 +15,7 @@
   "require": {
     "php": ">=7.4",
     "ext-openssl": "*",
-    "google/apiclient": "^2.12",
-    "composer/installers": "^2.0"
+    "google/apiclient": "^2.12"
   },
   "scripts": {
     "post-update-cmd": "Google\\Task\\Composer::cleanup"

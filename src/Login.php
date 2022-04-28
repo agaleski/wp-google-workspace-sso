@@ -2,6 +2,7 @@
 
 namespace AGaleski\WordPress\GoogleWorkspaceSso;
 
+use Google\Auth\AccessToken;
 use \Google_Client as GoogleClient;
 use \Google_Service_Oauth2 as GoogleServiceOauth2;
 
@@ -70,14 +71,14 @@ class Login
             $result = $client->fetchAccessTokenWithAuthCode($_GET[ 'code' ]);
             $user   = null;
 
-            if (isset($result[ 'id_token' ])) {
+            if (isset($result[ 'id_token' ]) && $client->verifyIdToken($result[ 'id_token' ])) {
 
                 $oauth2   = new GoogleServiceOauth2($client);
                 $userInfo = $oauth2->userinfo->get();
 
-                if (property_exists($userInfo, 'email')) {
+                if ($userInfo->getVerifiedEmail()) {
 
-                    $user = get_user_by('email', $userInfo->email);
+                    $user = get_user_by('email', $userInfo->getEmail());
 
                 }
 

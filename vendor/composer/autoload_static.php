@@ -46,10 +46,6 @@ class ComposerStaticInit546dee9a9d9f6c30b1b78eb862122018
         array (
             'Firebase\\JWT\\' => 13,
         ),
-        'A' => 
-        array (
-            'AGaleski\\WordPress\\GoogleWorkspaceSso\\' => 38,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -109,10 +105,6 @@ class ComposerStaticInit546dee9a9d9f6c30b1b78eb862122018
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
-        ),
-        'AGaleski\\WordPress\\GoogleWorkspaceSso\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
