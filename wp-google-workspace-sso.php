@@ -59,8 +59,6 @@ function wpgwsso_init()
     load_plugin_textdomain('wordpress-google-sso', false, WPGWSSO_REL_PATH . '/languages');
     spl_autoload_register('wpgwsso_autoload');
 
-    require_once 'vendor/autoload.php';
-
     if (! defined('REST_REQUEST') && ! defined('DOING_CRON')) {
 
         add_action('login_head', [ Login::class, 'run' ], 1);
