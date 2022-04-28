@@ -16,6 +16,25 @@ defined('ABSPATH') || exit;
 use AGaleski\WordPress\GoogleWorkspaceSso\Login;
 use AGaleski\WordPress\GoogleWorkspaceSso\Admin;
 
+function wpgwsso_autoload($class = '')
+{
+    $prefix = 'AGaleski\\WordPress\\GoogleWorkspaceSso\\';
+    $len    = strlen($prefix);
+
+    if (strncmp($prefix, $class, $len) !== 0) {
+
+        return;
+    }
+
+    $file = __DIR__ . '/src/' . str_replace('\\', '/', substr($class, $len)) . '.php';
+
+    if (file_exists($file)) {
+
+        require $file;
+
+    }
+}
+
 /**
  * Initialize the plugin once and run the contextual required code.
  *
@@ -26,7 +45,7 @@ function wpgwsso_init()
     /*
      * Prevent running multiple times.
      */
-    if (defined('WPGWSSO_REL_PATH')) {
+    if (defined('WPGWSSO_PATH')) {
 
         return;
     }
@@ -39,7 +58,7 @@ function wpgwsso_init()
 
     load_plugin_textdomain('wordpress-google-sso', false, WPGWSSO_REL_PATH . '/languages');
 
-    require_once 'vendor/autoload.php';
+    spl_autoload_register('wpgwsso_autoload');
 
     if (! defined('REST_REQUEST') && ! defined('DOING_CRON')) {
 
