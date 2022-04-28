@@ -9,12 +9,12 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 **Table of contents:**
 
-1.  [Create a Google-Cloud-Platform project](#1\._create_a_google-cloud-platform_project)
-2.  [Create a OAuth 2.0-Client-ID](#wpgwsso_create_client)
-3.  [Create a OAuth consent screen](#wpgwsso_create_screen)
-    1.  [Usage **with** a google workspace subscription](#wpgwsso_with_sub)
-    2.  [Usage **without** a google workspace subscription](#wpgwsso_without_sub)
-4.  [Set up the WordPress SSO admin login](#wpgwsso_setup)
+1.  [Create a Google-Cloud-Platform project](#1-create-a-google-cloud-platform-project)
+2.  [Create a OAuth 2.0-Client-ID](#2-create-a-oauth-20-client-id)
+3.  [Create a OAuth consent screen](#3-create-a-oauth-consent-screen)
+    1.  [Usage **with** a google workspace subscription](#3i-usage-with-a-google-workspace-subscription)
+    2.  [Usage **without** a google workspace subscription](#3-create-a-oauth-consent-screen)
+4.  [Set up the WordPress SSO admin login](#4-set-up-the-wordpress-sso-admin-login)
 
 * * *
 
