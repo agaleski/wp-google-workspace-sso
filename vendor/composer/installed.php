@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '6ebd12991d9c211953815d07ded9af9b1195fd9c',
+        'reference' => 'c41556164026d12a2153d718bb0c194d1c27885d',
         'name' => 'agaleski/wp-google-workspace-sso',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '6ebd12991d9c211953815d07ded9af9b1195fd9c',
+            'reference' => 'c41556164026d12a2153d718bb0c194d1c27885d',
             'dev_requirement' => false,
         ),
         'firebase/php-jwt' => array(
