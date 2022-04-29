@@ -2,7 +2,6 @@
 
 namespace AGaleski\WordPress\GoogleWorkspaceSso;
 
-use Google\Auth\AccessToken;
 use \Google_Client as GoogleClient;
 use \Google_Service_Oauth2 as GoogleServiceOauth2;
 
@@ -27,23 +26,17 @@ class Login
             (isset($_GET[ 'action' ]) && $_GET[ 'action' ] === 'confirm_admin_email')
             || ! Settings::isActive()
         ) {
-
             return;
         }
 
         $access = Settings::getAccess();
 
         if (! empty($_GET[ 'workspace' ]) && ! empty($access[ $_GET[ 'workspace' ] ])) {
-
             setcookie('workspace', $_GET[ 'workspace' ], time() + 86400, COOKIEPATH, COOKIE_DOMAIN, true);
-
             wp_redirect(self::getClient($access[ $_GET[ 'workspace' ] ])->createAuthUrl());
             exit;
-
-        } else if (isset($_GET[ 'redirect_to' ])) {
-
+        } elseif (isset($_GET[ 'redirect_to' ])) {
             setcookie('wpgwsso_redirect_to', $_GET[ 'redirect_to' ], time() + 120, COOKIEPATH, COOKIE_DOMAIN, true);
-
         }
 
         self::render($access);
@@ -66,24 +59,18 @@ class Login
             && isset($_COOKIE[ 'workspace' ])
             && ! empty($access = Settings::getAccess()[ $_COOKIE[ 'workspace' ] ])
         ) {
-
             $client = self::getClient($access);
             $result = $client->fetchAccessTokenWithAuthCode($_GET[ 'code' ]);
             $user   = null;
 
             if (isset($result[ 'id_token' ]) && $client->verifyIdToken($result[ 'id_token' ])) {
-
                 $oauth2   = new GoogleServiceOauth2($client);
                 $userInfo = $oauth2->userinfo->get();
 
                 if ($userInfo->getVerifiedEmail()) {
-
                     $user = get_user_by('email', $userInfo->getEmail());
-
                 }
-
             }
-
         }
 
         return $user;
@@ -101,26 +88,22 @@ class Login
     public static function handleWoocommerce(array $creds = []) : array
     {
         if (class_exists('WooCommerce') && ! empty($creds[ 'user_login' ])) {
-
             $userLogin = esc_attr($creds[ 'user_login' ]);
 
             if (strpos($userLogin, '@')) {
-
                 $user = get_user_by('email', $userLogin);
-
             } else {
-
                 $user = get_user_by('login', $userLogin);
-
             }
 
-            if (! empty($user) && property_exists($user, 'roles') && $user->roles[ 0 ] !== 'customer') {
-
+            if (
+                ! empty($user)
+                && property_exists($user, 'roles')
+                && $user->roles[ 0 ] !== 'customer'
+            ) {
                 wp_redirect(home_url() . '/wp-login.php');
                 exit;
-
             }
-
         }
 
         return $creds;
@@ -211,11 +194,8 @@ class Login
                         Select one
                     </option>
                 <?php foreach ($access as $brand => $data) {
-
                     $selected = ! empty($_COOKIE[ 'workspace' ]) && $_COOKIE[ 'workspace' ] === $brand ? 'selected' : '';
-
                     echo "<option value=\"{$brand}\" {$selected}>{$brand}</option>";
-
                 } ?>
                 </select>
                 <button type="submit">Log in with Google</button>
@@ -225,5 +205,4 @@ class Login
         </html>
         <?php
     }
-
 }
