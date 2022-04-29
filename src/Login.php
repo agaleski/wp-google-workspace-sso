@@ -12,7 +12,6 @@ use \Google_Service_Oauth2 as GoogleServiceOauth2;
  */
 class Login
 {
-
     /**
      * Renders the OAuth based Google SSO login screen and handles redirects to Google.
      *
@@ -20,12 +19,9 @@ class Login
      *
      * @return void
      */
-    public static function run()
+    public static function run(): void
     {
-        if (
-            (isset($_GET[ 'action' ]) && $_GET[ 'action' ] === 'confirm_admin_email')
-            || ! Settings::isActive()
-        ) {
+        if ((isset($_GET[ 'action' ]) && $_GET[ 'action' ] === 'confirm_admin_email')) {
             return;
         }
 
@@ -52,24 +48,28 @@ class Login
      *
      * @return \WP_User|null
      */
-    public static function authenticate($user = null)
+    public static function authenticate(?\WP_User $user = null): ?\WP_User
     {
-        if (
-            isset($_GET[ 'code' ])
-            && isset($_COOKIE[ 'workspace' ])
-            && ! empty($access = Settings::getAccess()[ $_COOKIE[ 'workspace' ] ])
-        ) {
-            $client = self::getClient($access);
-            $result = $client->fetchAccessTokenWithAuthCode($_GET[ 'code' ]);
-            $user   = null;
+        if (empty($_GET[ 'code' ]) || empty($_COOKIE[ 'workspace' ])) {
+            return $user;
+        }
 
-            if (isset($result[ 'id_token' ]) && $client->verifyIdToken($result[ 'id_token' ])) {
-                $oauth2   = new GoogleServiceOauth2($client);
-                $userInfo = $oauth2->userinfo->get();
+        $access = Settings::getAccess()[ $_COOKIE[ 'workspace' ] ];
 
-                if ($userInfo->getVerifiedEmail()) {
-                    $user = get_user_by('email', $userInfo->getEmail());
-                }
+        if (empty($access)) {
+            return $user;
+        }
+
+        $client = self::getClient($access);
+        $result = $client->fetchAccessTokenWithAuthCode($_GET[ 'code' ]);
+        $user   = null;
+
+        if (isset($result[ 'id_token' ]) && $client->verifyIdToken($result[ 'id_token' ])) {
+            $oauth2   = new GoogleServiceOauth2($client);
+            $userInfo = $oauth2->userinfo->get();
+
+            if ($userInfo->getVerifiedEmail()) {
+                $user = get_user_by('email', $userInfo->getEmail());
             }
         }
 
@@ -85,7 +85,7 @@ class Login
      *
      * @return array
      */
-    public static function handleWoocommerce(array $creds = []) : array
+    public static function handleWoocommerce(array $creds = []): array
     {
         if (class_exists('WooCommerce') && ! empty($creds[ 'user_login' ])) {
             $userLogin = esc_attr($creds[ 'user_login' ]);
@@ -122,7 +122,7 @@ class Login
      *
      * @return GoogleClient
      */
-    private static function getClient(array $access = [ 'id' => '', 'secret' => '' ]) : GoogleClient
+    private static function getClient(array $access = [ 'id' => '', 'secret' => '' ]): GoogleClient
     {
         $client = new GoogleClient();
         $client->setClientId(Settings::decrypt($access[ 'id' ]));
@@ -140,7 +140,7 @@ class Login
      *
      * @return void
      */
-    private static function render(array $access = [])
+    private static function render(array $access = []): void
     {
         ?>
         <!DOCTYPE html>
