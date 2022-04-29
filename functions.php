@@ -1,7 +1,8 @@
 <?php
 
-use AGaleski\WordPress\GoogleWorkspaceSso\Login;
 use AGaleski\WordPress\GoogleWorkspaceSso\Admin;
+use AGaleski\WordPress\GoogleWorkspaceSso\Login;
+use AGaleski\WordPress\GoogleWorkspaceSso\Settings;
 
 /**
  * Callback function. Custom dependency free psr-4 autoloader for this plugin.
@@ -12,7 +13,7 @@ use AGaleski\WordPress\GoogleWorkspaceSso\Admin;
  *
  * @return void
  */
-function wpgwsso_autoload(string $class = '')
+function wpgwsso_autoload(string $class = ''): void
 {
     $prefix = 'AGaleski\\WordPress\\GoogleWorkspaceSso\\';
     $len    = strlen($prefix);
@@ -33,9 +34,13 @@ function wpgwsso_autoload(string $class = '')
  *
  * @return void
  */
-function wpgwsso_init()
+function wpgwsso_init(): void
 {
-    if (defined('WPGWSSO_PATH')) {
+    if (
+        defined('WPGWSSO_PATH')
+        || defined('REST_REQUEST')
+        || defined('DOING_CRON')
+    ) {
         return;
     }
 
@@ -48,12 +53,13 @@ function wpgwsso_init()
     load_plugin_textdomain('wordpress-google-sso', false, WPGWSSO_REL_PATH . '/languages');
     spl_autoload_register('wpgwsso_autoload');
 
-    if (! defined('REST_REQUEST') && ! defined('DOING_CRON')) {
+    add_action('admin_menu', [ Admin::class, 'add' ]);
+    add_action('wp_ajax_' . Admin::ACTION, [ Admin::class, 'save' ]);
+
+    if (Settings::isActive()) {
         add_action('login_head', [ Login::class, 'run' ], 1);
         add_filter('authenticate', [ Login::class, 'authenticate' ], 10);
         add_action('admin_init', [ Admin::class, 'redirectTo' ]);
-        add_action('admin_menu', [ Admin::class, 'add' ]);
-        add_action('wp_ajax_' . Admin::ACTION, [ Admin::class, 'save' ]);
         add_filter('woocommerce_login_credentials', [ Login::class, 'handleWoocommerce' ], 1);
     }
 }
@@ -65,7 +71,7 @@ function wpgwsso_init()
  *
  * @return void
  */
-function wpgwsso_debug($data = null)
+function wpgwsso_debug($data = null): void
 {
     error_log(print_r($data, true) . PHP_EOL, 3, WP_CONTENT_DIR . '/debug.log');
 }
