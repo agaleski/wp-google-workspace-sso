@@ -1,4 +1,20 @@
 <?php
+/**
+ * WordPress Google Workspace SSO - WordPress plugin for Google single sign-on admin login via OAuth.
+ * Copyright (C) 2022 Achim Galeski ( achim-galeski@gmail.com )
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 3, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU General Public License for more details.
+ *
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA02110-1301USA
+ */
 
 namespace AGaleski\WordPress\GoogleWorkspaceSso;
 
@@ -6,10 +22,10 @@ namespace AGaleski\WordPress\GoogleWorkspaceSso;
  * Class Settings
  *
  * @package AGaleski\WordPress\GoogleWorkspaceSso
+ * @version 1.0.0
  */
 class Settings
 {
-
     public const  OPTION      = WPGWSSO_PREFIX . 'settings';
     private const CIPHER_ALGO = 'aes-256-cbc';
     private const HASH_ALGO   = 'sha3-512';
@@ -34,9 +50,9 @@ class Settings
      *
      * @return bool
      */
-    public static function isActive() : bool
+    public static function isActive(): bool
     {
-        return self::get()[ 'active' ];
+        return (bool) self::get()[ 'active' ];
     }
 
     /**
@@ -44,7 +60,7 @@ class Settings
      *
      * @return array
      */
-    public static function getAccess() : array
+    public static function getAccess(): array
     {
         return self::get()[ 'access' ];
     }
@@ -54,14 +70,12 @@ class Settings
      *
      * @return array
      */
-    private static function get() : array
+    private static function get(): array
     {
         if (empty(self::$settings[ 'loaded' ])) {
-
             $settings                   = get_network_option(get_current_network_id(), self::OPTION, []);
             self::$settings             = array_replace(self::$settings, $settings);
             self::$settings[ 'loaded' ] = true;
-
         }
 
         return self::$settings;
@@ -74,7 +88,7 @@ class Settings
      *
      * @return bool
      */
-    public static function set(array $settings = []) : bool
+    public static function set(array $settings = []): bool
     {
         self::$settings = array_replace(self::$settings, $settings);
 
@@ -88,7 +102,7 @@ class Settings
      *
      * @return string
      */
-    public static function decrypt(string $string = '') : string
+    public static function decrypt(string $string = ''): string
     {
         $string   = base64_decode($string);
         $hash     = substr($string, 0, 64);
@@ -100,7 +114,7 @@ class Settings
             return '';
         }
 
-        return '' . openssl_decrypt(
+        return (string) openssl_decrypt(
             substr($content, $ivLength),
             self::CIPHER_ALGO,
             self::getPassphrase(),
@@ -116,7 +130,7 @@ class Settings
      *
      * @return string
      */
-    public static function encrypt(string $string = '') : string
+    public static function encrypt(string $string = ''): string
     {
         $iv      = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::CIPHER_ALGO));
         $message = openssl_encrypt($string, self::CIPHER_ALGO, self::getPassphrase(), OPENSSL_RAW_DATA, $iv);
@@ -130,18 +144,16 @@ class Settings
      *
      * @return string
      */
-    private static function getPassphrase() : string
+    private static function getPassphrase(): string
     {
         if (empty(self::get()[ 'passphrase' ])) {
-
             $ivLength                       = openssl_cipher_iv_length(self::CIPHER_ALGO);
             self::$settings[ 'passphrase' ] = base64_encode(openssl_random_pseudo_bytes($ivLength));
 
             update_network_option(get_current_network_id(), self::OPTION, self::$settings);
-
         }
 
-        return base64_decode(self::$settings[ 'passphrase' ]);
+        return (string) base64_decode(self::$settings[ 'passphrase' ]);
     }
 
     /**
@@ -149,17 +161,14 @@ class Settings
      *
      * @return string
      */
-    private static function getHashKey() : string
+    private static function getHashKey(): string
     {
         if (empty(self::get()[ 'hashKey' ])) {
-
             self::$settings[ 'hashKey' ] = base64_encode(openssl_random_pseudo_bytes(64));
 
             update_network_option(get_current_network_id(), self::OPTION, self::$settings);
-
         }
 
-        return base64_decode(self::$settings[ 'hashKey' ]);
+        return (string) base64_decode(self::$settings[ 'hashKey' ]);
     }
-
 }

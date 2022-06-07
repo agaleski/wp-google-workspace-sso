@@ -1,4 +1,20 @@
 <?php
+/**
+ * WordPress Google Workspace SSO - WordPress plugin for Google single sign-on admin login via OAuth.
+ * Copyright (C) 2022 Achim Galeski ( achim-galeski@gmail.com )
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 3, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU General Public License for more details.
+ *
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA02110-1301USA
+ */
 
 namespace AGaleski\WordPress\GoogleWorkspaceSso;
 
@@ -6,12 +22,11 @@ namespace AGaleski\WordPress\GoogleWorkspaceSso;
  * Class Admin
  *
  * @package AGaleski\WordPress\GoogleWorkspaceSso
+ * @version 1.0.0
  */
 class Admin
 {
-
     public const ACTION = WPGWSSO_PREFIX . 'save_ajax_action';
-
     private const NONCE = WPGWSSO_PREFIX . 'save_ajax_nonce';
 
     /**
@@ -19,25 +34,23 @@ class Admin
      *
      * @return void
      */
-    public static function redirectTo()
+    public static function redirectTo(): void
     {
         if (isset($_COOKIE[ 'wpgwsso_redirect_to' ])) {
-
             setcookie('wpgwsso_redirect_to', '', time() - 120, COOKIEPATH, COOKIE_DOMAIN, true);
             wp_safe_redirect($_COOKIE[ 'redirect_to' ]);
             exit;
-
         }
     }
 
     /**
      * Adds the WP-Admin settings page to the "Users" menu.
      *
-     * @param string $context
+     * @param string|null $context
      *
      * @return void
      */
-    public static function add(string $context = '')
+    public static function add(?string $context = ''): void
     {
         add_submenu_page(
             'users.php',
@@ -57,30 +70,24 @@ class Admin
      *
      * @return void
      */
-    public static function save()
+    public static function save(): void
     {
         check_ajax_referer(self::ACTION, self::NONCE);
 
         if (empty($_POST[ Settings::OPTION ])) {
-
             wp_send_json_error([ 'error' => 'NOT Saved: Bad Request! Please check with your admin.' ], 400);
-
         }
 
         $settings             = $_POST[ Settings::OPTION ];
         $settings[ 'active' ] = isset($settings[ 'active' ]);
 
         if (! empty($settings[ 'access' ])) {
-
             foreach ($settings[ 'access' ] as $domain => $data) {
-
                 $domain                                      = esc_attr($domain);
                 $settings[ 'access' ][ $domain ][ 'name' ]   = esc_attr($data[ 'name' ]);
                 $settings[ 'access' ][ $domain ][ 'id' ]     = Settings::encrypt(esc_attr($data[ 'id' ]));
                 $settings[ 'access' ][ $domain ][ 'secret' ] = Settings::encrypt(esc_attr($data[ 'secret' ]));
-
             }
-
         }
 
         Settings::set($settings);
@@ -94,7 +101,7 @@ class Admin
      *
      * @return void
      */
-    public static function render()
+    public static function render(): void
     {
         ?>
         <link rel="stylesheet" type="text/css" href="<?=WPGWSSO_URL?>assets/css/admin.css?v<?=time()?>">
@@ -198,7 +205,7 @@ class Admin
      *
      * @return string
      */
-    private static function getSettingHtml(string $domain = '%%DOMAIN_NAME%%') : string
+    private static function getSettingHtml(string $domain = '%%DOMAIN_NAME%%'): string
     {
         $option = Settings::OPTION;
         $id     = '';
@@ -210,11 +217,9 @@ class Admin
         $extension = apply_filters('wpgwsso_settings_html_extension', '', $domain, $option);
 
         if ($domain !== '%%DOMAIN_NAME%%') {
-
             $access = Settings::getAccess();
             $id     = $access[ $domain ][ 'id' ] ? Settings::decrypt($access[ $domain ][ 'id' ]) : '';
             $secret = $access[ $domain ][ 'secret' ] ? Settings::decrypt($access[ $domain ][ 'secret' ]) : '';
-
         }
 
         return "
@@ -259,5 +264,4 @@ class Admin
             </table>
         ";
     }
-
 }
